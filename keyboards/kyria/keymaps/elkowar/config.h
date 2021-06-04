@@ -38,8 +38,11 @@
 #endif
 
 #ifdef COMBO_ENABLE
-  #define COMBO_COUNT 10
+  //#define COMBO_COUNT 10
   #define COMBO_TERM 25
+  #define COMBO_TERM_PER_COMBO
+
+  //#define combo_variable_len
 #endif
 
 

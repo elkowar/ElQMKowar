@@ -16,6 +16,7 @@
 #include QMK_KEYBOARD_H
 #include <keymap_steno.h>
 #include <rgblight.h>
+/*#include <g/keymap_combo.h>*/
 
 
 enum layers {
@@ -24,12 +25,18 @@ enum layers {
     _UML,
     _PLOVER,
     _SYM,
-    _NUMS,
     _NUMPAD,
     _WMWSP,
     _ADJUST
 };
 
+enum custom_keycodes {
+    CUS_OE = SAFE_RANGE,
+    CUS_SZ,
+    CUS_UE,
+    CUS_AE,
+    CUS_UML,
+};
 
 #ifdef COMBO_ENABLE // {{{
 
@@ -41,79 +48,54 @@ enum combos {
   KSEMI_EXCL,
   DSEMI_UNDS,
 
-  JM_SHIFT,
-  FV_SHIFT,
-  KCOMMA_SHIFT,
-
   QR_UML_OSL,
+
+  COMBO_LENGTH,
 };
 
 
 
 
-const uint16_t PROGMEM jl_combo[]      = {KC_L,   KC_J,      COMBO_END};
-const uint16_t PROGMEM asemi_combo[]   = {KC_A,   KC_SCLN,   COMBO_END};
-const uint16_t PROGMEM f13bspc_combo[] = {KC_F13, KC_BSPC,   COMBO_END};
-const uint16_t PROGMEM fj_combo[]      = {KC_F,   KC_J,      COMBO_END};
-const uint16_t PROGMEM ksemi_combo[]   = {KC_K,   KC_SCLN,   COMBO_END};
-const uint16_t PROGMEM dsemi_combo[]   = {KC_D,   KC_SCLN,   COMBO_END};
+const uint16_t PROGMEM jl_combo[]      = {KC_L,         KC_J,              COMBO_END};
+const uint16_t PROGMEM asemi_combo[]   = {LSFT_T(KC_A), RSFT_T(KC_SCLN),   COMBO_END};
+const uint16_t PROGMEM f13bspc_combo[] = {KC_F13,       KC_BSPC,           COMBO_END};
+const uint16_t PROGMEM fj_combo[]      = {KC_F,         KC_J,              COMBO_END};
+const uint16_t PROGMEM ksemi_combo[]   = {KC_K,         RSFT_T(KC_SCLN),   COMBO_END};
+const uint16_t PROGMEM dsemi_combo[]   = {KC_D,         RSFT_T(KC_SCLN),   COMBO_END};
 
-const uint16_t PROGMEM jm_combo[]      = {KC_J,   KC_M,      COMBO_END};
-const uint16_t PROGMEM fv_combo[]      = {KC_F,   KC_V,      COMBO_END};
-const uint16_t PROGMEM kcomma_combo[]  = {KC_K,   KC_COMMA,  COMBO_END};
-const uint16_t PROGMEM qr_combo[]      = {KC_Q,   KC_R,      COMBO_END};
+const uint16_t PROGMEM qr_combo[]      = {KC_Q,         KC_R,              COMBO_END};
 
 
 
-combo_t key_combos[COMBO_COUNT] = {
-  [JL_C_BSPC]  = COMBO_ACTION(jl_combo),
-  [ASEMI_QSTN] = COMBO(asemi_combo, KC_QUES),
+combo_t key_combos[] = {
+  [JL_C_BSPC]  = COMBO(jl_combo,      LCTL(KC_BSPC)),
+  [ASEMI_QSTN] = COMBO(asemi_combo,   KC_QUES),
   [THUMB_RET]  = COMBO(f13bspc_combo, KC_ENT),
-  [FJ_RET]     = COMBO(fj_combo, KC_ENT),
-  [KSEMI_EXCL] = COMBO(ksemi_combo, KC_EXLM),
-  [DSEMI_UNDS] = COMBO(dsemi_combo, KC_UNDS),
+  [FJ_RET]     = COMBO(fj_combo,      KC_ENT),
+  [KSEMI_EXCL] = COMBO(ksemi_combo,   KC_EXLM),
+  [DSEMI_UNDS] = COMBO(dsemi_combo,   KC_UNDS),
 
-  [JM_SHIFT] = COMBO_ACTION(jm_combo),
-  [FV_SHIFT] = COMBO_ACTION(fv_combo),
-  [KCOMMA_SHIFT] = COMBO_ACTION(kcomma_combo),
-
-  [QR_UML_OSL] = COMBO_ACTION(qr_combo),
+  /*[QR_UML_OSL] = COMBO(qr_combo,      OSL(_UML)),*/
+  [QR_UML_OSL] = COMBO(qr_combo,      CUS_UML),
 };
+uint16_t COMBO_LEN = COMBO_LENGTH;
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
     switch(combo_index) {
-        case JL_C_BSPC:
-            if (pressed) {
-                tap_code16(LCTL(KC_BSPC));
-            }
-            break;
-        case JM_SHIFT:
-            if (pressed) {
-                set_oneshot_mods(MOD_BIT(KC_RSFT));
-            }
-            break;
-        case FV_SHIFT:
-            if (pressed) {
-                set_oneshot_mods(MOD_BIT(KC_LSFT));
-            }
-            break;
-        case KCOMMA_SHIFT:
-            if (pressed) {
-                set_oneshot_mods(MOD_BIT(KC_LCTL));
-            }
-            break;
-
-        case QR_UML_OSL:
-            if (pressed) {
-                /*set_oneshot_layer(_UML, ONESHOT_START);*/
-            } else {
-                /*clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);*/
-            }
-            break;
     }
 }
 
+
+uint16_t get_combo_term(uint16_t index, combo_t *combo) {
+    switch (index) {
+        case FJ_RET:
+            return 100;
+    }
+    return COMBO_TERM;
+}
+
 #endif // }}}
+
 
 // super+number
 #define WS(x) G(x)
@@ -123,55 +105,37 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 #define LT_BSPSYM LT(_SYM, KC_BSPC)
 enum {
     TD_SUPR,
+    TD_BKTCK,
 };
 
-void td_supr(qk_tap_dance_state_t *state, void *user_data) {
+void td_supr_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        // what the hell do I put here :(
+        register_code16(KC_LGUI);
     } else if (state->count >= 2) {
         set_oneshot_layer(_WMWSP, ONESHOT_START);
     }
 }
+void td_supr_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code16(KC_LGUI);
+    } else if (state->count >= 2) {
+        clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
+    }
+}
+
+void td_backtick(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 4) {
+        SEND_STRING("```"SS_LSFT(SS_TAP(X_ENT))"```"SS_TAP(X_UP)SS_TAP(X_END));
+    } else {
+        tap_code(KC_GRV);
+    }
+}
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_SUPR] = ACTION_TAP_DANCE_FN(td_supr),
+    [TD_SUPR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_supr_finished, td_supr_reset),
+    [TD_BKTCK] = ACTION_TAP_DANCE_FN(td_backtick),
 };
 
-/*enum {*/
-    /*TD_OE,*/
-/*};*/
-
-/*void td_oe(qk_tap_dance_state_t *state, void *user_data) {*/
-    /*if (state->count >= 3) {*/
-        /*send_unicode_string("ö");*/
-    /*}*/
-/*}*/
-/*void td_ae(qk_tap_dance_state_t *state, void *user_data) {*/
-    /*if (state->count >= 3) {*/
-        /*send_unicode_string("ö");*/
-    /*}*/
-/*}*/
-/*void td_ue(qk_tap_dance_state_t *state, void *user_data) {*/
-    /*if (state->count >= 3) {*/
-        /*send_unicode_string("ü");*/
-    /*}*/
-/*}*/
-/*void td_sz(qk_tap_dance_state_t *state, void *user_data) {*/
-    /*if (state->count >= 3) {*/
-        /*send_unicode_string("ß");*/
-    /*}*/
-/*}*/
-
-/*qk_tap_dance_action_t tap_dance_actions[] = {*/
-    /*[TD_O_OE] = ACTION_TAP_DANCE_FN(td_oe)*/
-/*};*/
-
-enum custom_keycodes {
-    CUS_OE = SAFE_RANGE,
-    CUS_SZ,
-    CUS_UE,
-    CUS_AE,
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*
@@ -185,8 +149,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
       KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_F13,    KC_N,     KC_M,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
-                                                    KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      KC_LGUI,       KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
-                                                    /*KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      TD(TD_SUPR),   KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT*/
+                                                    KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      TD(TD_SUPR),   KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
 //                                                 `--------+--------+---------+--------+----------------' `--------+----------+---------+--------+--------'
     ),
 
@@ -199,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_F13,    KC_N,     KC_M,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
                                                     KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      KC_LGUI,       KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
-                                                    /*KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      TD(TD_SUPR),   KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT*/
+                                                    KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      TD(TD_SUPR),   KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
 //                                                 `--------+--------+---------+--------+----------------' `--------+----------+---------+--------+--------'
     ),
 /*
@@ -235,28 +198,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_SYM] = LAYOUT(
 //   ,-----------------------------------------------------.                                         ,------------------------------------------------------.
-      _______, KC_CIRC, KC_EXLM, KC_DQUO, KC_SLSH, KC_BSLS,                                           KC_GRV,   KC_LCBR, KC_LBRC, KC_RBRC, KC_RCBR, KC_ASTR,
-//   |--------+--------+--------+--------+--------+--------|                                         |---------+--------+--------+--------+--------+--------|
-      _______, KC_HOME, KC_DLR,  KC_LPRN, KC_RPRN, KC_END,                                            KC_LEFT,  KC_DOWN, KC_UP,   KC_RGHT, KC_AMPR, KC_PERC,
-//   |--------+--------+--------+--------+--------+--------+-----------+--------.  ,--------+--------+---------+--------+--------+--------+--------+--------|
-      _______, KC_AT,   KC_DEL,  KC_PIPE, KC_QUES, KC_TILD, OSL(_WMWSP), _______,   _______, _______, KC_DEL,   KC_EQL,  KC_HASH, KC_UNDS, _______, _______,
-//   `--------+--------+--------+--------+--------+--------+-----------+--------|  |--------+--------+---------+--------+--------+--------+--------+--------'
-                                 _______, _______, _______,  KC_0,      _______,    _______, KC_DEL,  _______,  _______, _______
+      _______, KC_CIRC, KC_EXLM, KC_DQUO, KC_SLSH, KC_BSLS,                                           TD(TD_BKTCK), KC_LCBR, KC_LBRC, KC_RBRC, KC_RCBR, KC_ASTR,
+//   |--------+--------+--------+--------+--------+--------|                                         |-------------+--------+--------+--------+--------+--------|
+      _______, KC_HOME, KC_DLR,  KC_LPRN, KC_RPRN, KC_END,                                            KC_LEFT,      KC_DOWN, KC_UP,   KC_RGHT, KC_AMPR, KC_PERC,
+//   |--------+--------+--------+--------+--------+--------+-----------+--------.  ,--------+--------+-------------+--------+--------+--------+--------+--------|
+      _______, KC_AT,   KC_DEL,  KC_PIPE, KC_QUES, KC_TILD, OSL(_WMWSP), _______,   _______, _______, KC_DEL,       KC_EQL,  KC_HASH, KC_UNDS, _______, _______,
+//   `--------+--------+--------+--------+--------+--------+-----------+--------|  |--------+--------+-------------+--------+--------+--------+--------+--------'
+                                 _______, _______, _______,  KC_0,      _______,    _______, KC_DEL,  _______,       _______, _______
 //                              `--------+--------+--------+-----------+--------'  `--------+--------+---------+--------+--------'
-    ),
-/*
- * Number keys
- */
-    [_NUMS] = LAYOUT(
-//   ,-----------------------------------------------------.                                     ,------------------------------------------------------.
-      _______, _______, _______, _______, _______, _______,                                       _______, _______,  _______, _______, _______, _______,
-//   |--------+--------+--------+--------+--------+--------|                                     |---------+--------+--------+--------+--------+--------|
-      _______, KC_1, 	KC_2,    KC_3,    KC_4,    KC_5,                                          KC_6,     KC_7,    KC_8,    KC_9,    KC_0,    _______,
-//   |--------+--------+--------+--------+--------+--------+--------+--------. ,--------+--------+---------+--------+--------+--------+--------+--------|
-      _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______,  _______, _______, _______, _______,
-//   `--------+--------+--------+--------+--------+--------+--------+--------| |--------+--------+---------+--------+--------+--------+--------+--------'
-                                 _______, KC_0,    KC_0,    _______, _______,   _______, _______, _______,  _______, _______
-//                              `--------+--------+--------+--------+--------' `--------+--------+---------+--------+--------'
     ),
 
 /*
@@ -312,7 +261,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed && is_oneshot_layer_active()) {
-        clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
+        clear_oneshot_layer_state(ONESHOT_PRESSED);
     }
     switch (keycode) {
         case CUS_OE:
@@ -333,6 +282,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case CUS_AE:
             if (record->event.pressed) {
                 send_unicode_string("ä");
+            }
+            break;
+        case CUS_UML:
+            if (record->event.pressed) {
+                SEND_STRING(SS_TAP(X_RALT)"\"");
             }
             break;
     }
@@ -368,8 +322,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             rgblight_setrgb(0, 055, 237);
             break;
         case _SYM:
-            break;
-        case _NUMS:
             break;
         case _NUMPAD:
             break;

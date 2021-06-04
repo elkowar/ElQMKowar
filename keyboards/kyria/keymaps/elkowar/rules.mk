@@ -7,3 +7,5 @@ TAP_DANCE_ENABLE = yes
 STENO_ENABLE = yes
 MOUSEKEYS_ENABLE = no
 
+#VPATH += keyboards/gboards
+
