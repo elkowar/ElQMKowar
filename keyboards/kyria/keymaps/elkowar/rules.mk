@@ -6,6 +6,9 @@ UNICODE_ENABLE = yes
 TAP_DANCE_ENABLE = yes
 STENO_ENABLE = yes
 MOUSEKEYS_ENABLE = no
+LEADER_ENABLE = yes
+
+SRC += features/casemodes.c
 
 #VPATH += keyboards/gboards
 
