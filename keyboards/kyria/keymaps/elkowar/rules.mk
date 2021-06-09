@@ -9,6 +9,7 @@ MOUSEKEYS_ENABLE = no
 LEADER_ENABLE = yes
 
 SRC += features/casemodes.c
+# SRC += g/engine.c
 
-#VPATH += keyboards/gboards
+VPATH += keyboards/gboards/
 

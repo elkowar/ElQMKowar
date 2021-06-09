@@ -18,7 +18,6 @@
 #include <rgblight.h>
 
 #include "features/casemodes.h"
-/*#include <g/keymap_combo.h>*/
 
 
 enum layers {
@@ -41,56 +40,13 @@ enum custom_keycodes {
     CUS_UML,
 };
 
+#include "g/keymap_combo.h"
+
 #ifdef COMBO_ENABLE // {{{
-
-enum combos {
-  JL_C_BSPC,
-  ASEMI_QSTN,
-  THUMB_RET,
-  FJ_RET,
-  KSEMI_EXCL,
-  DSEMI_UNDS,
-
-  QR_UML_OSL,
-
-  COMBO_LENGTH,
-};
-
-
-
-
-const uint16_t PROGMEM jl_combo[]      = {KC_L,         KC_J,              COMBO_END};
-const uint16_t PROGMEM asemi_combo[]   = {LSFT_T(KC_A), RSFT_T(KC_SCLN),   COMBO_END};
-const uint16_t PROGMEM f13bspc_combo[] = {KC_LEAD,      KC_BSPC,           COMBO_END};
-const uint16_t PROGMEM fj_combo[]      = {KC_F,         KC_J,              COMBO_END};
-const uint16_t PROGMEM ksemi_combo[]   = {KC_K,         RSFT_T(KC_SCLN),   COMBO_END};
-const uint16_t PROGMEM dsemi_combo[]   = {KC_D,         RSFT_T(KC_SCLN),   COMBO_END};
-
-const uint16_t PROGMEM qr_combo[]      = {KC_Q,         KC_R,              COMBO_END};
-
-
-combo_t key_combos[] = {
-  [JL_C_BSPC]  = COMBO(jl_combo,      LCTL(KC_BSPC)),
-  [ASEMI_QSTN] = COMBO(asemi_combo,   KC_QUES),
-  [THUMB_RET]  = COMBO(f13bspc_combo, KC_ENT),
-  [FJ_RET]     = COMBO(fj_combo,      KC_ENT),
-  [KSEMI_EXCL] = COMBO(ksemi_combo,   KC_EXLM),
-  [DSEMI_UNDS] = COMBO(dsemi_combo,   KC_UNDS),
-
-  /*[QR_UML_OSL] = COMBO(qr_combo,      OSL(_UML)),*/
-  [QR_UML_OSL] = COMBO(qr_combo,      CUS_UML),
-};
-uint16_t COMBO_LEN = COMBO_LENGTH;
-
-void process_combo_event(uint16_t combo_index, bool pressed) {
-    switch(combo_index) {
-    }
-}
-
 
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
     switch (index) {
-        case FJ_RET:
+        case TN_RET:
             return 100;
     }
     return COMBO_TERM;
@@ -173,7 +129,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
       KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_F13,    KC_N,     KC_M,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
-                                                    /*KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      KC_LGUI,       KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT*/
                                                     KC_LALT, KC_LCTL, OSSFT,    KC_SPC,      TD(TD_SUPR),   KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
 //                                                 `--------+--------+---------+--------+----------------' `--------+----------+---------+--------+--------'
     ),

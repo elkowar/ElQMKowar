@@ -42,6 +42,8 @@
   #define COMBO_TERM 25
   #define COMBO_TERM_PER_COMBO
 
+  #define COMBO_ONLY_FROM_LAYER _QWERTY
+
   //#define combo_variable_len
 #endif
 
