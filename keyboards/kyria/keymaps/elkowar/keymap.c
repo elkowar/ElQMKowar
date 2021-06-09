@@ -282,6 +282,9 @@ void matrix_scan_user(void) {
         SEQ_TWO_KEYS(KC_F, KC_C) {
             enable_xcase_with(OSM(MOD_LSFT));
         }
+        SEQ_TWO_KEYS(KC_F, KC_A) {
+            enable_xcase();
+        }
     }
 }
 
