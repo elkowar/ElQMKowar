@@ -6,8 +6,9 @@ COMB(SO_UNDS,    KC_UNDS,       KC_S, RSFT_T(KC_O))
 COMB(QR_UML_OSL, CUS_UML,       KC_Q, KC_P)
 
 SUBS(SC_BIGRAM,  "sc",          KC_S, KC_C)
-SUBS(YOU_WORD,  "you",          KC_U, RSFT_T(KC_O))
-SUBS(YOURE_WORD,"you're",       KC_R, KC_U, RSFT_T(KC_O))
+SUBS(YOURE_WORD,"you're",       LT_BSPSYM, KC_R, KC_U)
+SUBS(YOU_WORD,  "you",          LT_BSPSYM, KC_U)
+SUBS(ELK_WORD,  "elkowar",      LT_BSPSYM, KC_L, KC_E)
 
 COMB(LPREN, KC_LPRN, LSFT_T(KC_A), KC_I)
 COMB(RPREN, KC_RPRN, RSFT_T(KC_O), KC_R)

@@ -45,6 +45,15 @@ enum {
     TD_BKTCK,
 };
 
+
+
+// super+number
+#define WS(x) G(x)
+#define MVWS(x) S(G(x))
+
+#define OSSFT OSM(MOD_LSFT)
+#define LT_BSPSYM LT(_SYM, KC_BSPC)
+
 #include "g/keymap_combo.h"
 
 #ifdef COMBO_ENABLE // {{{
@@ -70,12 +79,6 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
 #endif // }}}
 
 
-// super+number
-#define WS(x) G(x)
-#define MVWS(x) S(G(x))
-
-#define OSSFT OSM(MOD_LSFT)
-#define LT_BSPSYM LT(_SYM, KC_BSPC)
 
 
 void td_supr_finished(qk_tap_dance_state_t *state, void *user_data) {
