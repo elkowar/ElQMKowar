@@ -22,7 +22,7 @@
 
 #ifdef RGBLIGHT_ENABLE
   //#define RGBLIGHT_ANIMATIONS
-  #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+  //#define RGBLIGHT_EFFECT_RAINBOW_MOOD
 
 
   #define RGBLIGHT_HUE_STEP 8
@@ -31,7 +31,7 @@
   #define RGBLIGHT_LIMIT_VAL 150
 
 
-  #define RGBLIGHT_LAYERS
+  //#define RGBLIGHT_LAYERS
 
   #define RGBLIGHT_DEFAULT_HUE 157
 
@@ -39,7 +39,7 @@
 
 #ifdef COMBO_ENABLE
   //#define COMBO_COUNT 10
-  #define COMBO_TERM 25
+  #define COMBO_TERM 40
   #define COMBO_TERM_PER_COMBO
 
   #define COMBO_ONLY_FROM_LAYER _QWERTY

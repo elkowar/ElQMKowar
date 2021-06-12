@@ -40,6 +40,11 @@ enum custom_keycodes {
     CUS_UML,
 };
 
+enum {
+    TD_SUPR,
+    TD_BKTCK,
+};
+
 #include "g/keymap_combo.h"
 
 #ifdef COMBO_ENABLE // {{{
@@ -47,7 +52,17 @@ enum custom_keycodes {
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
     switch (index) {
         case TN_RET:
-            return 100;
+            return 60;
+        case NI_C_BSPC:
+        case EO_EXCL:
+        case UML_AE:
+        case UML_OE:
+        case UML_UE:
+        case UML_SS:
+        case CTRL_Z:
+        case CTRL_C:
+        case CTRL_V:
+            return 25;
     }
     return COMBO_TERM;
 }
@@ -62,10 +77,6 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
 #define OSSFT OSM(MOD_LSFT)
 #define LT_BSPSYM LT(_SYM, KC_BSPC)
 
-enum {
-    TD_SUPR,
-    TD_BKTCK,
-};
 
 void td_supr_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
@@ -115,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   |-----------------------+-------------+-------+--------+--------+---------|                                               |---------+--------+--------+--------+-----------------+--------|
       MT(MOD_LCTL, KC_ESC),   LSFT_T(KC_A),  KC_R,   KC_S,    KC_T,    KC_G,                                                     KC_M,    KC_N,    KC_E,    KC_I,    RSFT_T(KC_O),     KC_QUOT,
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
-      KC_LSFT,                KC_K,          KC_X,   KC_C,    KC_D,    KC_V,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,    KC_Z,     KC_H,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
+      KC_LSFT,                KC_K,          KC_X,   KC_C,    KC_D,    KC_V,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,    KC_Z,    KC_H,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
                                                     KC_LALT, KC_LCTL, OSL(_SYM),KC_SPC,      KC_LGUI,       KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
 //                                                 `--------+--------+---------+--------+----------------' `--------+----------+---------+--------+--------'
@@ -257,9 +268,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         MAP_KEY(CUS_UE, "ü");
         MAP_KEY(CUS_AE, "ä");
         MAP_KEY(CUS_SZ, "ß");
-        KEY_ACTION(CUS_UML,
-            SEND_STRING(SS_TAP(X_RALT)"\"");
-        );
     }
     return true;
 }
@@ -272,7 +280,7 @@ void matrix_init_user() {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     // epic rgb lighting
-    switch(get_highest_layer(state)) {
+    switch(get_highest_layer(state|default_layer_state)) {
         case _QWERTY: rgblight_setrgb(0, 255, 157); break;
         case _GAMER:  rgblight_setrgb(220, 005, 057); break;
         case _COLEMK: rgblight_setrgb(255, 255, 255); break;
