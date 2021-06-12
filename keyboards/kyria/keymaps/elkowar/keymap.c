@@ -71,6 +71,8 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case CTRL_Z:
         case CTRL_C:
         case CTRL_V:
+        case LPREN:
+        case RPREN:
             return 25;
     }
     return COMBO_TERM;
