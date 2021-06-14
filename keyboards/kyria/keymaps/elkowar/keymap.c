@@ -51,6 +51,10 @@ enum {
 #define WS(x) G(x)
 #define MVWS(x) S(G(x))
 
+
+#define LS(x) LSFT_T((x))
+#define RS(x) RSFT_T((x))
+
 #define OSSFT OSM(MOD_LSFT)
 #define LT_BSPSYM LT(_SYM, KC_BSPC)
 
@@ -61,7 +65,7 @@ enum {
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
     switch (index) {
         case TN_RET:
-            return 60;
+            return 40;
         case NI_C_BSPC:
         case EO_EXCL:
         case UML_AE:
@@ -112,14 +116,15 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 };
 
 
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT(
 //   ,-------------------------------------------------------------------------.                                               ,---------------------------------------------------------------.
       LT(_NUMPAD, KC_TAB),    KC_Q,          KC_W,   KC_E,    KC_R,    KC_T,                                                     KC_Y,     KC_U,    KC_I,    KC_O,    KC_P,            KC_PLUS,
 //   |-----------------------+-------------+-------+--------+--------+---------|                                               |---------+--------+--------+--------+-----------------+--------|
-      MT(MOD_LCTL, KC_ESC),   LSFT_T(KC_A),  KC_S,   KC_D,    KC_F,    KC_G,                                                     KC_H,     KC_J,    KC_K,    KC_L,    RSFT_T(KC_SCLN), KC_QUOT,
+      MT(MOD_LCTL, KC_ESC),   KC_A,         LS(KC_S),KC_D,    KC_F,    KC_G,                                                     KC_H,     KC_J,    KC_K,   RS(KC_L), KC_SCLN,         KC_QUOT,
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
-      KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,   KC_N,     KC_M,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
+      KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,   KC_N,     KC_M,    KC_COMM, KC_DOT,   KC_MINS,         KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
                                                     KC_LALT, KC_LCTL, OSL(_SYM),KC_SPC,      KC_LGUI,       KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
 //                                                 `--------+--------+---------+--------+----------------' `--------+----------+---------+--------+--------'
@@ -129,7 +134,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   ,-------------------------------------------------------------------------.                                               ,---------------------------------------------------------------.
       LT(_NUMPAD, KC_TAB),    KC_Q,          KC_W,   KC_F,    KC_P,    KC_B,                                                     KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN,          KC_PLUS,
 //   |-----------------------+-------------+-------+--------+--------+---------|                                               |---------+--------+--------+--------+-----------------+--------|
-      MT(MOD_LCTL, KC_ESC),   LSFT_T(KC_A),  KC_R,   KC_S,    KC_T,    KC_G,                                                     KC_M,    KC_N,    KC_E,    KC_I,    RSFT_T(KC_O),     KC_QUOT,
+      MT(MOD_LCTL, KC_ESC),   KC_A,         LS(KC_R),KC_S,    KC_T,    KC_G,                                                     KC_M,    KC_N,    KC_E,    RS(KC_I),    KC_O,         KC_QUOT,
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
       KC_LSFT,                KC_K,          KC_X,   KC_C,    KC_D,    KC_V,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,    KC_Z,    KC_H,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
@@ -287,10 +292,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     // epic rgb lighting
     switch(get_highest_layer(state|default_layer_state)) {
         case _QWERTY: rgblight_setrgb(0, 255, 157); break;
-        case _GAMER:  rgblight_setrgb(220, 005, 057); break;
+        case _GAMER:  rgblight_setrgb(220, 5, 57); break;
         case _COLEMK: rgblight_setrgb(255, 255, 255); break;
         case _UML:    rgblight_setrgb(30, 255, 250); break;
-        case _PLOVER: rgblight_setrgb(0, 055, 237); break;
+        case _PLOVER: rgblight_setrgb(0, 55, 237); break;
         case _WMWSP:  rgblight_setrgb(255, 0, 255); break;
         case _ADJUST: rgblight_setrgb(255, 255, 0); break;
     }
