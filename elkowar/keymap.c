@@ -77,9 +77,13 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case CTRL_V:
         case LPREN:
         case RPREN:
-            return 25;
+            return 20;
     }
-    return COMBO_TERM;
+    return 25;
+}
+
+bool combo_should_trigger(uint16_t combo_index, combo_t *combo) {
+    return true;
 }
 
 #endif // }}}
