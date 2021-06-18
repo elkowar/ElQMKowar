@@ -38,6 +38,8 @@ enum custom_keycodes {
     CUS_UE,
     CUS_AE,
     CUS_UML,
+
+    CUS_SCREAM_SNAKE,
 };
 
 enum {
@@ -55,6 +57,22 @@ enum {
 #define LS(x) LSFT_T((x))
 #define RS(x) RSFT_T((x))
 
+
+// defined colemak homerow to make my life easier in combos.def
+#define HOME_A KC_A
+#define HOME_R LS(KC_R)
+#define HOME_S KC_S
+#define HOME_T KC_T
+#define HOME_N KC_N
+#define HOME_E KC_E
+#define HOME_I RS(KC_I)
+#define HOME_O KC_O
+
+
+
+
+
+
 #define OSSFT OSM(MOD_LSFT)
 #define LT_BSPSYM LT(_SYM, KC_BSPC)
 
@@ -63,6 +81,10 @@ enum {
 #ifdef COMBO_ENABLE // {{{
 
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
+    // home row number combos need some more time.
+    if (index >= HRNR_7 && index <= HRNR_4) {
+        return 40;
+    }
     switch (index) {
         case TN_RET:
             return 40;
@@ -91,6 +113,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo) {
 
 
 
+
 void td_supr_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         register_code16(KC_LGUI);
@@ -110,7 +133,9 @@ void td_backtick(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 4) {
         SEND_STRING("```"SS_LSFT(SS_TAP(X_ENT))"```"SS_TAP(X_UP)SS_TAP(X_END));
     } else {
-        tap_code(KC_GRV);
+        for (int i = 0; i < state->count; i++) {
+            tap_code(KC_GRV);
+        }
     }
 }
 
@@ -138,7 +163,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   ,-------------------------------------------------------------------------.                                               ,---------------------------------------------------------------.
       LT(_NUMPAD, KC_TAB),    KC_Q,          KC_W,   KC_F,    KC_P,    KC_B,                                                     KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN,          KC_PLUS,
 //   |-----------------------+-------------+-------+--------+--------+---------|                                               |---------+--------+--------+--------+-----------------+--------|
-      MT(MOD_LCTL, KC_ESC),   KC_A,         LS(KC_R),KC_S,    KC_T,    KC_G,                                                     KC_M,    KC_N,    KC_E,    RS(KC_I),    KC_O,         KC_QUOT,
+      MT(MOD_LCTL, KC_ESC),   HOME_A,        HOME_R, HOME_S,  HOME_T,  KC_G,                                                     KC_M,    HOME_N,  HOME_E,  HOME_I,  HOME_O,           KC_QUOT,
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
       KC_LSFT,                KC_K,          KC_X,   KC_C,    KC_D,    KC_V,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,    KC_Z,    KC_H,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
@@ -282,6 +307,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         MAP_KEY(CUS_UE, "ü");
         MAP_KEY(CUS_AE, "ä");
         MAP_KEY(CUS_SZ, "ß");
+        
+        case CUS_SCREAM_SNAKE:
+            if (record->event.pressed) {
+                enable_xcase_with(KC_UNDS); 
+                enable_caps_word();
+            }
+            break;
+
     }
     return true;
 }
