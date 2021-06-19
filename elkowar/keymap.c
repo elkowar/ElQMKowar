@@ -78,12 +78,15 @@ enum {
 
 #include "g/keymap_combo.h"
 
+
 #ifdef COMBO_ENABLE // {{{
 
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
     // home row number combos need some more time.
     if (index >= HRNR_7 && index <= HRNR_4) {
         return 40;
+    } else if (index >= COMBO_LCTL && index <= COMBO_SFT_CTL_GUI) {
+        return 10;
     }
     switch (index) {
         case TN_RET:
