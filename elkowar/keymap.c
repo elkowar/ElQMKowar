@@ -79,6 +79,13 @@ enum {
 #include "g/keymap_combo.h"
 
 
+
+
+// the time of the last non-combo input, used to tweak the timing of combos depending on if I'm currently
+// in active typing flow (should practically remove any chance of mistriggering space-combos)
+static uint16_t non_combo_input_timer = 0;
+
+
 #ifdef COMBO_ENABLE // {{{
 
 uint16_t get_combo_term(uint16_t index, combo_t *combo) {
@@ -86,7 +93,7 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
     if (index >= HRNR_7 && index <= HRNR_4) {
         return 40;
     } else if (index >= COMBO_LCTL && index <= COMBO_SFT_CTL_GUI) {
-        return 10;
+        return timer_elapsed(non_combo_input_timer) > 300 ? 50 : 5;
     }
     switch (index) {
         case TN_RET:
@@ -97,12 +104,13 @@ uint16_t get_combo_term(uint16_t index, combo_t *combo) {
         case UML_OE:
         case UML_UE:
         case UML_SS:
-        case CTRL_Z:
-        case CTRL_C:
-        case CTRL_V:
         case LPREN:
         case RPREN:
             return 20;
+        case CTRL_Z:
+        case CTRL_C:
+        case CTRL_V:
+            return timer_elapsed(non_combo_input_timer) > 300 ? 30 : 5;
     }
     return 25;
 }
@@ -304,6 +312,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_case_modes(keycode, record)) {
         return false;
     }
+
+
+    non_combo_input_timer = timer_read();
 
     switch (keycode) {
         MAP_KEY(CUS_OE, "ö");
