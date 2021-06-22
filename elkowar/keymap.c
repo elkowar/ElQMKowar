@@ -225,7 +225,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //   |--------+--------+--------+--------+--------+--------|                                         |-------------+--------+--------+--------+--------+--------|
       _______, KC_HOME, KC_DLR,  KC_LPRN, KC_RPRN, KC_END,                                            KC_LEFT,      KC_DOWN, KC_UP,   KC_RGHT, KC_AMPR, KC_PERC,
 //   |--------+--------+--------+--------+--------+--------+-----------+--------.  ,--------+--------+-------------+--------+--------+--------+--------+--------|
-      _______, KC_AT,   KC_DEL,  KC_PIPE, KC_QUES, KC_TILD, OSL(_WMWSP), _______,   _______, _______, KC_DEL,       KC_EQL,  KC_HASH, KC_UNDS, _______, _______,
+      _______, KC_AT,   KC_DEL,  KC_PIPE, KC_QUES, KC_TILD, OSL(_WMWSP), _______,   _______, _______, KC_DEL,       KC_EQL,  KC_HASH, KC_UNDS, KC_PGUP, KC_PGDN,
 //   `--------+--------+--------+--------+--------+--------+-----------+--------|  |--------+--------+-------------+--------+--------+--------+--------+--------'
                                  _______, _______, _______,  KC_0,      _______,    _______, KC_DEL,  _______,       _______, _______
 //                              `--------+--------+--------+-----------+--------'  `--------+--------+---------+--------+--------'
@@ -313,7 +313,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
-
     non_combo_input_timer = timer_read();
 
     switch (keycode) {
@@ -321,7 +320,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         MAP_KEY(CUS_UE, "ü");
         MAP_KEY(CUS_AE, "ä");
         MAP_KEY(CUS_SZ, "ß");
-        
+        case KC_ESC:
+            clear_oneshot_mods();
+
         case CUS_SCREAM_SNAKE:
             if (record->event.pressed) {
                 enable_xcase_with(KC_UNDS); 
@@ -331,6 +332,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     }
     return true;
+}
+
+
+
+struct {
+    uint8_t hue;
+    uint8_t sat;
+    uint8_t value;
+} lighting_state;
+
+void oneshot_mods_changed_user(uint8_t mods) {
+    // TODO epic lighting indicator of the one shot mods here
+
 }
 
 
