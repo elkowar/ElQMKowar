@@ -358,13 +358,13 @@ void matrix_init_user() {
 layer_state_t layer_state_set_user(layer_state_t state) {
     // epic rgb lighting
     switch(get_highest_layer(state|default_layer_state)) {
-        case _QWERTY: rgblight_setrgb(0, 255, 157); break;
-        case _GAMER:  rgblight_setrgb(220, 5, 57); break;
-        case _COLEMK: rgblight_setrgb(255, 255, 255); break;
-        case _UML:    rgblight_setrgb(30, 255, 250); break;
-        case _PLOVER: rgblight_setrgb(0, 55, 237); break;
-        case _WMWSP:  rgblight_setrgb(255, 0, 255); break;
-        case _ADJUST: rgblight_setrgb(255, 255, 0); break;
+        case _QWERTY: rgblight_sethsv_noeeprom(109, 255, 255); break;
+        case _GAMER:  rgblight_sethsv_noeeprom(0, 255, 255); break;
+        case _COLEMK: rgblight_sethsv_noeeprom(0, 0, 255); break;
+        case _UML:    rgblight_sethsv_noeeprom(156, 255, 255); break;
+        case _PLOVER: rgblight_sethsv_noeeprom(52, 255, 255); break;
+        case _WMWSP:  rgblight_sethsv_noeeprom(90, 125, 255); break;
+        case _ADJUST: rgblight_sethsv_noeeprom(34, 255, 255); break;
     }
     return state;
 }
