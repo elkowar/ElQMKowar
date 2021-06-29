@@ -186,11 +186,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_GAMER] = LAYOUT(
 //   ,-------------------------------------------------------------------------.                                               ,---------------------------------------------------------------.
-      LT(_NUMPAD, KC_TAB),    KC_Q,          KC_W,   KC_E,    KC_R,    KC_T,                                                    KC_Y,     KC_U,    KC_I,    KC_O,    KC_P,             KC_PLUS,
+      KC_TAB,                 KC_Q,          KC_W,   KC_E,    KC_R,    KC_T,                                                    KC_Y,     KC_U,    KC_I,    KC_O,    KC_P,             KC_PLUS,
 //   |-----------------------+-------------+-------+--------+--------+---------|                                               |---------+--------+--------+--------+-----------------+--------|
-      MT(MOD_LCTL, KC_ESC),   KC_A,          KC_S,   KC_D,    KC_F,    KC_G,                                                    KC_H,     KC_J,    KC_K,    KC_L,    KC_SCLN,          KC_QUOT,
+      MOD_LCTL,               KC_A,          KC_S,   KC_D,    KC_F,    KC_G,                                                    KC_H,     KC_J,    KC_K,    KC_L,    KC_SCLN,          KC_QUOT,
 //   |-----------------------+-------------+-------+--------+--------+---------+------------+------------. ,--------+----------+---------+--------+--------+--------+-----------------+--------|
-      KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_LEAD,   KC_N,     KC_M,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
+      KC_LSFT,                KC_Z,          KC_X,   KC_C,    KC_V,    KC_B,    MO(_ADJUST), MO(_NUMPAD),   TG(_UML),KC_ESC,    KC_N,     KC_M,    KC_COMM, KC_DOT,  KC_MINS,          KC_RSFT,
 //   `-----------------------+-------------+-------+--------+--------+---------+------------+------------| |--------+----------+---------+--------+--------+--------+-----------------+--------'
                                                     KC_LALT, KC_LCTL, OSL(_SYM),KC_SPC,      KC_LGUI,       KC_ENT,  LT_BSPSYM, OSSFT,    KC_LCTL, KC_RALT
 //                                                 `--------+--------+---------+--------+----------------' `--------+----------+---------+--------+--------'
@@ -371,9 +371,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 
 void suspend_power_down_user(void) {
-    rgblight_setrgb(0, 0, 0);
+    rgblight_sethsv_noeeprom(0, 0, 0);
 }
 void suspend_wakeup_init_user(void) {
-    rgblight_setrgb(0, 255, 157);
+    rgblight_sethsv_noeeprom(109, 255, 255);
 }
 
